@@ -16,7 +16,7 @@ def insert_sentence(sentences,difficulty_level,source):
 
         cur = conn.cursor()
 
-        sql = "INSERT INTO engpt.sentences (content, difficulty_level,source) VALUES (%s, %s, %s);"
+        sql = "INSERT INTO engpt.sentences (english_sentence, difficulty_level,source) VALUES (%s, %s, %s);"
 
         for sentence in sentences:
             clean_sentence = sentence.strip()
