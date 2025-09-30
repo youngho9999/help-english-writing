@@ -1,4 +1,6 @@
 import nltk
 
 def split_article(article):
-    return nltk.sent_tokenize(article)
+    sentences =  nltk.sent_tokenize(article)
+    filtered_sentences = [sent for sent in sentences if len(sent.split()) > 4]
+    return filtered_sentences
