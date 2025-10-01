@@ -3,7 +3,7 @@ from transform import split_article
 
 if __name__ == "__main__":
 
-    difficulty = 2
+    difficulty = 3
     source = ""
 
     article = """
