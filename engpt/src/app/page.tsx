@@ -1,103 +1,127 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import ProblemCard from "@/components/features/ProblemCard";
+import AnswerInput from "@/components/features/AnswerInput";
+import FeedbackDisplay from "@/components/features/FeedbackDisplay";
+import Button from "@/components/ui/Button";
+import { problems } from "@/data/problems";
+import { FeedbackData } from "@/types";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [feedback, setFeedback] = useState<FeedbackData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const currentProblem = problems[currentProblemIndex];
+
+  const handleSubmit = async () => {
+    if (!userAnswer.trim()) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/evaluate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          korean: currentProblem.korean,
+          userAnswer,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("평가 요청에 실패했습니다.");
+      }
+
+      const data: FeedbackData = await response.json();
+      setFeedback(data);
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Submit error:", error);
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentProblemIndex < problems.length - 1) {
+      setCurrentProblemIndex(currentProblemIndex + 1);
+      setUserAnswer("");
+      setFeedback(null);
+      setIsSubmitted(false);
+    } else {
+      // 모든 문제를 완료한 경우
+      if (confirm("모든 문제를 완료했습니다! 처음부터 다시 시작하시겠습니까?")) {
+        setCurrentProblemIndex(0);
+        setUserAnswer("");
+        setFeedback(null);
+        setIsSubmitted(false);
+      }
+    }
+  };
+
+  if (problems.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">문제가 없습니다</h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            src/data/problems.ts 파일에 문제를 추가해주세요.
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 py-16">
+      <div className="w-full max-w-5xl space-y-12">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-6xl font-bold mb-4">EngPT</h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400">영어 작문 연습 플랫폼</p>
+        </div>
+
+        {/* Problem Card */}
+        <ProblemCard
+          korean={currentProblem.korean}
+          problemNumber={currentProblemIndex + 1}
+          totalProblems={problems.length}
+        />
+
+        {/* Answer Input */}
+        {!isSubmitted && (
+          <>
+            <AnswerInput value={userAnswer} onChange={setUserAnswer} disabled={isLoading} />
+
+            {/* Submit Button */}
+            <div className="flex justify-center">
+              <Button onClick={handleSubmit} disabled={!userAnswer.trim() || isLoading}>
+                {isLoading ? "평가 중..." : "제출하기"}
+              </Button>
+            </div>
+          </>
+        )}
+
+        {/* Feedback Display */}
+        {isSubmitted && feedback && (
+          <>
+            <FeedbackDisplay feedback={feedback} />
+
+            {/* Next Button */}
+            <div className="flex justify-center">
+              <Button onClick={handleNext} variant="secondary">
+                {currentProblemIndex < problems.length - 1 ? "다음 문제" : "처음으로"}
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,56 @@
+---
+alwaysApply: true
+---
+
+Objective:
+Design a set of cursor rules and interactive behaviors for a website. The design should be directly inspired by the core principles of https://www.curated.supply/, aiming for a user experience that is modern, minimalist, and interactive.
+
+Core Design Principles to Embody:
+
+Bold Minimalism: The design should be clean and uncluttered. The cursor must be a functional element, not a distraction.
+
+Typography-Centric: The cursor should intelligently interact with text elements, acknowledging typography as a primary UI component.
+
+Dynamic Feedback: The cursor's state changes should provide clear, immediate, and engaging feedback to user actions.
+
+Monochromatic with a High-Contrast Accent: The color palette should be strictly limited, primarily using black and white, with a single, vibrant accent color reserved for key interactive moments.
+
+Required Cursor Design Rules & States:
+
+1. Default State:
+
+Rule: The default cursor should not be a standard system arrow.
+
+Implementation: Design a minimal cursor, such as a small dot (e.g., 8px diameter) or a thin crosshair (+). It must maintain high visibility against all backgrounds.
+
+
+2. Hover State: Clickable Elements (Buttons, Images, Projects)
+
+Rule: When hovering over primary interactive elements, the cursor's change must be dramatic and clear, using the designated accent color.
+
+Implementation:
+
+The cursor expands into a larger shape (e.g., a 32px circle).
+
+The fill of the shape should be the website's main accent color (e.g., bright yellow, electric blue).
+
+A label like "View" or an icon (+) can appear inside the expanded cursor to provide context.
+
+3. Movement & Animation:
+
+Rule: The cursor's movement should feel fluid and responsive, not abrupt.
+
+Implementation: Apply a subtle "trail" or smoothing effect (e.g., a 0.1s ease-out transition) to the cursor's position. This gives the movement a more organic and premium feel.
+
+4. Color Logic:
+
+Rule: The cursor must adapt its color for maximum contrast and legibility.
+
+Implementation:
+
+The default cursor should be black on light backgrounds and white on dark backgrounds.
+
+Implement a "difference" or "exclusion" blend mode so the cursor automatically inverts the color of whatever is behind it.
+
+Final Goal:
+The resulting cursor experience should feel deeply integrated into the website's design language. It must enhance usability by providing clear feedback while reinforcing a sophisticated and cutting-edge aesthetic.
