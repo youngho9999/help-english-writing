@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import  generateContent  from "@/lib/gemini";
+import generateContent from "@/lib/gemini";
 
 export async function POST(request: NextRequest) {
   try {
-    const { korean, userAnswer } = await request.json();
+    const { korean, english, userAnswer } = await request.json();
 
-    if (!korean || !userAnswer) {
-      return NextResponse.json({ error: "한글 문장과 사용자 답변이 필요합니다." }, { status: 400 });
+    if (!korean || !english || !userAnswer) {
+      return NextResponse.json(
+        { error: "한글 문장, 영어 문장, 사용자 답변이 필요합니다." },
+        { status: 400 }
+      );
     }
 
-    const responseText = await generateContent(korean);
-
+    const responseText = await generateContent(korean, english, userAnswer);
 
     return NextResponse.json(responseText);
   } catch (error) {

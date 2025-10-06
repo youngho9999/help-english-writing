@@ -1,19 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProblemCard from "@/components/features/ProblemCard";
 import AnswerInput from "@/components/features/AnswerInput";
 import FeedbackDisplay from "@/components/features/FeedbackDisplay";
 import Button from "@/components/ui/Button";
-import { problems } from "@/data/problems";
-import { FeedbackData } from "@/types";
+import { FeedbackData, Problem } from "@/types";
 
 export default function Home() {
+  const [problems, setProblems] = useState<Problem[]>([]);
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [userAnswer, setUserAnswer] = useState("");
   const [feedback, setFeedback] = useState<FeedbackData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoadingProblems, setIsLoadingProblems] = useState(true);
+
+  // 문제 가져오기
+  useEffect(() => {
+    const fetchProblems = async () => {
+      try {
+        const response = await fetch("/api/questions");
+        if (!response.ok) {
+          throw new Error("문제를 가져오는데 실패했습니다.");
+        }
+        const data = await response.json();
+        setProblems(data.questions);
+      } catch (error) {
+        console.error("Fetch problems error:", error);
+        alert("문제를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setIsLoadingProblems(false);
+      }
+    };
+
+    fetchProblems();
+  }, []);
 
   const currentProblem = problems[currentProblemIndex];
 
@@ -29,6 +51,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           korean: currentProblem.korean,
+          english: currentProblem.english,
           userAnswer,
         }),
       });
@@ -65,13 +88,25 @@ export default function Home() {
     }
   };
 
+  // 로딩 중
+  if (isLoadingProblems) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">문제를 불러오는 중...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  // 문제가 없을 때
   if (problems.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">문제가 없습니다</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            src/data/problems.ts 파일에 문제를 추가해주세요.
+            데이터베이스에 한국어 번역이 있는 문장을 추가해주세요.
           </p>
         </div>
       </div>
@@ -96,31 +131,29 @@ export default function Home() {
 
         {/* Answer Input */}
         {!isSubmitted && (
-          <>
-            <AnswerInput value={userAnswer} onChange={setUserAnswer} disabled={isLoading} />
-
-            {/* Submit Button */}
-            <div className="flex justify-center">
-              <Button onClick={handleSubmit} disabled={!userAnswer.trim() || isLoading}>
-                {isLoading ? "평가 중..." : "제출하기"}
-              </Button>
-            </div>
-          </>
+          <AnswerInput value={userAnswer} onChange={setUserAnswer} disabled={isLoading} />
         )}
 
         {/* Feedback Display */}
         {isSubmitted && feedback && (
-          <>
-            <FeedbackDisplay feedback={feedback} />
-
-            {/* Next Button */}
-            <div className="flex justify-center">
-              <Button onClick={handleNext} variant="secondary">
-                {currentProblemIndex < problems.length - 1 ? "다음 문제" : "처음으로"}
-              </Button>
-            </div>
-          </>
+          <FeedbackDisplay
+            feedback={feedback}
+            userAnswer={userAnswer}
+            correctEnglish={currentProblem.english}
+          />
         )}
+
+        {/* Buttons - Always visible */}
+        <div className="flex justify-center gap-4">
+          {!isSubmitted && (
+            <Button onClick={handleSubmit} disabled={!userAnswer.trim() || isLoading}>
+              {isLoading ? "평가 중..." : "제출하기"}
+            </Button>
+          )}
+          <Button onClick={handleNext} variant="secondary">
+            {currentProblemIndex < problems.length - 1 ? "다음 문제" : "처음으로"}
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -1,13 +1,21 @@
 export interface Problem {
   id: number;
   korean: string;
+  english: string;
+}
+
+export interface DetailedFeedback {
+  type: "Praise" | "Suggestion";
+  original: string;
+  comment: string;
 }
 
 export interface FeedbackData {
   score: number;
-  grammar: string[];
-  suggestions: string[];
-  correctedAnswer: string;
+  corrected_sentence: string;
+  feedback_summary: string;
+  detailed_feedback: DetailedFeedback[];
+  alternative_expressions: string[];
 }
 
 export interface AppState {

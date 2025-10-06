@@ -12,8 +12,8 @@ export default function ProblemCard({ korean, problemNumber, totalProblems }: Pr
       <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
         문제 {problemNumber} / {totalProblems}
       </div>
-      <div className="bg-white dark:bg-black border-2 border-black dark:border-white rounded-2xl p-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-center leading-relaxed">{korean}</h1>
+      <div className="bg-white dark:bg-black border-2 border-black dark:border-white rounded-2xl p-8">
+        <h2 className="text-2xl md:text-3xl font-medium text-center leading-relaxed">{korean}</h2>
       </div>
     </div>
   );
