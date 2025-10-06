@@ -8,6 +8,7 @@ interface ButtonProps {
   disabled?: boolean;
   variant?: "primary" | "secondary";
   className?: string;
+  type?: "button" | "submit" | "reset";
 }
 
 export default function Button({
@@ -16,9 +17,11 @@ export default function Button({
   disabled = false,
   variant = "primary",
   className,
+  type = "button",
 }: ButtonProps) {
   return (
     <button
+      type={type}
       onClick={onClick}
       disabled={disabled}
       className={cn(

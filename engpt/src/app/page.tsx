@@ -6,6 +6,8 @@ import ProblemCard from "@/components/features/ProblemCard";
 import AnswerInput from "@/components/features/AnswerInput";
 import FeedbackDisplay from "@/components/features/FeedbackDisplay";
 import Button from "@/components/ui/Button";
+import LoginModal from "@/components/auth/LoginModal";
+import RegisterModal from "@/components/auth/RegisterModal";
 import { FeedbackData, Problem } from "@/types";
 
 export default function Home() {
@@ -18,9 +20,23 @@ export default function Home() {
   const [isLoadingProblems, setIsLoadingProblems] = useState(true);
   const [isMac, setIsMac] = useState(false);
 
-  // OS 감지
+  // 인증 관련 상태
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  // OS 감지 및 로그인 상태 확인
   useEffect(() => {
     setIsMac(navigator.platform.toUpperCase().indexOf("MAC") >= 0);
+
+    // 로컬스토리지에서 로그인 정보 확인
+    const token = localStorage.getItem("token");
+    const savedUser = localStorage.getItem("user");
+    if (token && savedUser) {
+      setIsLoggedIn(true);
+      setUser(JSON.parse(savedUser));
+    }
   }, []);
 
   // 문제 가져오기
@@ -122,6 +138,34 @@ export default function Home() {
     setIsSubmitted(false);
   };
 
+  // 인증 핸들러
+  const handleLoginSuccess = (token: string, userData: any) => {
+    setIsLoggedIn(true);
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUser(null);
+  };
+
+  const handleSwitchToRegister = () => {
+    setIsLoginModalOpen(false);
+    setIsRegisterModalOpen(true);
+  };
+
+  const handleSwitchToLogin = () => {
+    setIsRegisterModalOpen(false);
+    setIsLoginModalOpen(true);
+  };
+
+  const handleRegisterSuccess = () => {
+    setIsRegisterModalOpen(false);
+    setIsLoginModalOpen(true);
+  };
+
   // 문제가 로드되지 않았으면 아무것도 렌더링하지 않음
   if (!currentProblem) {
     return null;
@@ -130,13 +174,39 @@ export default function Home() {
   return (
     <div className="min-h-screen p-8">
       {/* Header - Left Top */}
-      <Link
-        href="/"
-        className="inline-block mb-8 cursor-pointer hover:opacity-80 transition-opacity"
-      >
-        <h1 className="text-2xl font-bold">EngPT</h1>
-        <p className="text-sm text-gray-600 dark:text-gray-400">영어 작문 연습 플랫폼</p>
-      </Link>
+      <div className="mb-8">
+        <Link href="/" className="inline-block cursor-pointer hover:opacity-80 transition-opacity">
+          <h1 className="text-2xl font-bold">EngPT</h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400">영어 작문 연습 플랫폼</p>
+        </Link>
+
+        {/* 로그인/회원가입/로그아웃 버튼 */}
+        <div className="mt-4 flex items-center gap-3">
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white border border-gray-300 dark:border-gray-700 rounded-lg hover:border-black dark:hover:border-white transition-all duration-200"
+            >
+              로그아웃
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white border border-gray-300 dark:border-gray-700 rounded-lg hover:border-black dark:hover:border-white transition-all duration-200"
+              >
+                로그인
+              </button>
+              <button
+                onClick={() => setIsRegisterModalOpen(true)}
+                className="px-4 py-2 text-sm font-medium bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 rounded-lg transition-all duration-200"
+              >
+                회원가입
+              </button>
+            </>
+          )}
+        </div>
+      </div>
 
       <div className="w-full max-w-5xl mx-auto space-y-8">
         {/* Problem Card */}
@@ -204,6 +274,20 @@ export default function Home() {
           </Button>
         </div>
       )}
+
+      {/* 로그인/회원가입 모달 */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+        onSwitchToRegister={handleSwitchToRegister}
+      />
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={() => setIsRegisterModalOpen(false)}
+        onRegisterSuccess={handleRegisterSuccess}
+        onSwitchToLogin={handleSwitchToLogin}
+      />
     </div>
   );
 }

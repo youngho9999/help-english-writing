@@ -62,3 +62,38 @@ export interface TranslateBatchResponse {
   failed: number;
   results: TranslationResult[];
 }
+
+// 인증 관련 타입
+export interface User {
+  id: string;
+  email: string;
+  name: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface RegisterRequest {
+  email: string;
+  password: string;
+  name?: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  message: string;
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string | null;
+  };
+}
+
+export interface UserResponse {
+  user: User;
+}
