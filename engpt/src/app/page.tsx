@@ -155,8 +155,7 @@ export default function Home() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setIsLoggedIn(false);
-    setUser(null);
+    window.location.href = "/";
   };
 
   const handleSwitchToRegister = () => {
