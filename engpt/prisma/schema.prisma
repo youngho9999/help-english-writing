@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -30,20 +31,19 @@ model sentences {
 }
 
 model Submission {
-  id                String   @id @default(cuid())
+  id                String    @id @default(cuid())
   userId            String?
   sentenceId        Int
-  userAnswer        String   @db.VarChar(1000)
-  korean            String   @db.VarChar(500)
+  userAnswer        String    @db.VarChar(1000)
+  korean            String    @db.VarChar(500)
   score             Int
-  correctedSentence String   @db.VarChar(1000)
-  feedbackSummary   String   @db.Text
+  correctedSentence String    @db.VarChar(1000)
+  feedbackSummary   String
   detailedFeedback  Json
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  sentence sentences @relation(fields: [sentenceId], references: [sentence_id], onDelete: Cascade)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  sentence          sentences @relation(fields: [sentenceId], references: [sentence_id], onDelete: Cascade)
+  user              User?     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([sentenceId])
