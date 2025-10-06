@@ -268,11 +268,32 @@ export default function Home() {
             </Button>
           </div>
         )}
+
+        {/* Action Buttons after submission - Mobile: centered below, Desktop: fixed right */}
+        {isSubmitted && (
+          <div className="flex justify-center gap-3 md:hidden mt-8">
+            <Button onClick={handleRetry} variant="primary" className="shadow-lg">
+              재시도
+            </Button>
+            <Button onClick={handleNext} variant="secondary" className="shadow-lg">
+              다음 문제
+            </Button>
+          </div>
+        )}
+
+        {/* Next Button when not submitted - Mobile: centered below, Desktop: hidden */}
+        {!isSubmitted && (
+          <div className="flex justify-center md:hidden mt-8">
+            <Button onClick={handleNext} variant="secondary" className="shadow-lg">
+              다음 문제
+            </Button>
+          </div>
+        )}
       </div>
 
-      {/* Fixed Navigation Buttons - Right Side */}
+      {/* Fixed Navigation Buttons - Desktop only (right side) */}
       {isSubmitted && (
-        <div className="fixed right-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-50">
+        <div className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 flex-col gap-3 z-50">
           <Button onClick={handleRetry} variant="primary" className="shadow-lg">
             재시도
           </Button>
@@ -282,9 +303,9 @@ export default function Home() {
         </div>
       )}
 
-      {/* Fixed Next Button - When not submitted */}
+      {/* Fixed Next Button - Desktop only (right side) */}
       {!isSubmitted && (
-        <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50">
+        <div className="hidden md:block fixed right-8 top-1/2 -translate-y-1/2 z-50">
           <Button onClick={handleNext} variant="secondary" className="shadow-lg">
             다음 문제
           </Button>
