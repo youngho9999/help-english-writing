@@ -59,7 +59,7 @@ export default function FeedbackDisplay({
           <ul className="space-y-3">
             {praiseFeedback.map((item, index) => (
               <li key={index} className="text-purple-800 dark:text-purple-200">
-                <span className="font-semibold">"{item.original}"</span>
+                <span className="font-semibold">&quot;{item.original}&quot;</span>
                 <p className="mt-1 ml-4">{item.comment}</p>
               </li>
             ))}
@@ -76,7 +76,7 @@ export default function FeedbackDisplay({
           <ul className="space-y-3">
             {suggestionFeedback.map((item, index) => (
               <li key={index} className="text-orange-800 dark:text-orange-200">
-                <span className="font-semibold">"{item.original}"</span>
+                <span className="font-semibold">&quot;{item.original}&quot;</span>
                 <p className="mt-1 ml-4">{item.comment}</p>
               </li>
             ))}

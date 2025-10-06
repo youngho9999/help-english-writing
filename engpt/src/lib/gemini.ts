@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { FeedbackData } from "@/types";
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY || "",
@@ -8,7 +9,7 @@ export default async function generateContent(
   korean: string,
   english: string,
   userAnswer: string
-): Promise<any> {
+): Promise<FeedbackData> {
   const prompt = `
 [역할 정의]
 You are an English teacher specializing in teaching Korean students at the A2-B1 level. Your name is "Tutor Gemini". Your primary goal is to provide feedback that is encouraging, easy to understand, and helps the user learn effectively. Always maintain a friendly, supportive, and positive tone.

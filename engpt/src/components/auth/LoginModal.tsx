@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
+import { AuthResponse } from "@/types";
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (token: string, user: any) => void;
+  onLoginSuccess: (token: string, user: AuthResponse["user"]) => void;
   onSwitchToRegister: () => void;
 }
 

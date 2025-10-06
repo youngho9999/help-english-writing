@@ -112,7 +112,7 @@ export default function MySubmissionsPage() {
       let recent30Average: number | undefined = undefined;
 
       if (recent30.length >= 30) {
-        const sum = recent30.reduce((acc: number, sub: any) => acc + sub.score, 0);
+        const sum = recent30.reduce((acc: number, sub: Submission) => acc + sub.score, 0);
         recent30Average = Math.round(sum / 30);
       }
 

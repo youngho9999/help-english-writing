@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { Prisma } from "@prisma/client";
 
 /**
  * 사용자의 제출 기록 조회
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // 필터 조건
-    const where: any = {
+    const where: Prisma.SubmissionWhereInput = {
       userId: user.userId,
     };
 

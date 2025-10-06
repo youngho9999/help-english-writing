@@ -8,7 +8,7 @@ import FeedbackDisplay from "@/components/features/FeedbackDisplay";
 import Button from "@/components/ui/Button";
 import LoginModal from "@/components/auth/LoginModal";
 import RegisterModal from "@/components/auth/RegisterModal";
-import { FeedbackData, Problem } from "@/types";
+import { FeedbackData, Problem, AuthResponse } from "@/types";
 
 export default function Home() {
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -24,7 +24,7 @@ export default function Home() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<AuthResponse["user"] | null>(null);
 
   // OS 감지 및 로그인 상태 확인
   useEffect(() => {
@@ -147,7 +147,7 @@ export default function Home() {
   };
 
   // 인증 핸들러
-  const handleLoginSuccess = (token: string, userData: any) => {
+  const handleLoginSuccess = (token: string, userData: AuthResponse["user"]) => {
     setIsLoggedIn(true);
     setUser(userData);
   };
