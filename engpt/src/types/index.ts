@@ -97,3 +97,28 @@ export interface AuthResponse {
 export interface UserResponse {
   user: User;
 }
+
+// 제출 기록 관련 타입
+export interface Submission {
+  id: string;
+  userId: string;
+  sentenceId: number;
+  userAnswer: string;
+  korean: string;
+  score: number;
+  correctedSentence: string;
+  feedbackSummary: string;
+  detailedFeedback: DetailedFeedback[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateSubmissionRequest {
+  sentenceId: number;
+  korean: string;
+  userAnswer: string;
+  score: number;
+  correctedSentence: string;
+  feedbackSummary: string;
+  detailedFeedback: DetailedFeedback[];
+}

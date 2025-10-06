@@ -8,21 +8,46 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  name      String?  @db.VarChar(100)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String       @id @default(cuid())
+  email       String       @unique @db.VarChar(255)
+  password    String       @db.VarChar(255)
+  name        String?      @db.VarChar(100)
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  submissions Submission[]
 
   @@map("users")
 }
 
 model sentences {
-  sentence_id      Int     @id @default(autoincrement())
-  english_sentence String  @db.VarChar(500)
+  sentence_id      Int          @id @default(autoincrement())
+  english_sentence String       @db.VarChar(500)
   difficulty_level Int
-  source           String  @db.VarChar(100)
-  korean_sentence  String? @db.VarChar(500)
+  source           String       @db.VarChar(100)
+  korean_sentence  String?      @db.VarChar(500)
+  submissions      Submission[]
+}
+
+model Submission {
+  id                String   @id @default(cuid())
+  userId            String?
+  sentenceId        Int
+  userAnswer        String   @db.VarChar(1000)
+  korean            String   @db.VarChar(500)
+  score             Int
+  correctedSentence String   @db.VarChar(1000)
+  feedbackSummary   String   @db.Text
+  detailedFeedback  Json
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sentence sentences @relation(fields: [sentenceId], references: [sentence_id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([sentenceId])
+  @@index([createdAt])
+  @@index([sentenceId, userAnswer])
+  @@map("submissions")
 }

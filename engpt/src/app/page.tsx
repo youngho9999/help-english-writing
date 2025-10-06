@@ -67,15 +67,23 @@ export default function Home() {
 
     setIsLoading(true);
     try {
+      // Authorization 헤더 준비 (로그인한 경우)
+      const token = localStorage.getItem("token");
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+      };
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const response = await fetch("/api/evaluate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify({
           korean: currentProblem.korean,
           english: currentProblem.english,
           userAnswer,
+          sentenceId: currentProblem.id,
         }),
       });
 
@@ -183,12 +191,20 @@ export default function Home() {
         {/* 로그인/회원가입/로그아웃 버튼 */}
         <div className="mt-4 flex items-center gap-3">
           {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white border border-gray-300 dark:border-gray-700 rounded-lg hover:border-black dark:hover:border-white transition-all duration-200"
-            >
-              로그아웃
-            </button>
+            <>
+              <Link
+                href="/my-submissions"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white border border-gray-300 dark:border-gray-700 rounded-lg hover:border-black dark:hover:border-white transition-all duration-200"
+              >
+                내 답변 보기
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white border border-gray-300 dark:border-gray-700 rounded-lg hover:border-black dark:hover:border-white transition-all duration-200"
+              >
+                로그아웃
+              </button>
+            </>
           ) : (
             <>
               <button

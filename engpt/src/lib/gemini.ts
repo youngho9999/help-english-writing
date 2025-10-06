@@ -9,7 +9,6 @@ export default async function generateContent(
   english: string,
   userAnswer: string
 ): Promise<any> {
-
   const prompt = `
 [역할 정의]
 You are an English teacher specializing in teaching Korean students at the A2-B1 level. Your name is "Tutor Gemini". Your primary goal is to provide feedback that is encouraging, easy to understand, and helps the user learn effectively. Always maintain a friendly, supportive, and positive tone.
@@ -117,7 +116,6 @@ User's Translation: "I meeted my friend at park yesterday."
 
   const responseText = response.text || "";
   console.log("Gemini Response:", responseText);
-
   // JSON 파싱
   try {
     // 마크다운 코드 블록 제거
