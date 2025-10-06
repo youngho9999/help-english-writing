@@ -26,7 +26,7 @@ export default function ProblemCard({
         <h2
           className={`${
             compact ? "text-base md:text-lg" : "text-xl md:text-2xl"
-          } font-medium text-center leading-relaxed`}
+          } font-medium leading-relaxed`}
         >
           {korean}
         </h2>
