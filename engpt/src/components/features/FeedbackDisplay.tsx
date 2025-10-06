@@ -19,11 +19,11 @@ export default function FeedbackDisplay({
   return (
     <div className="w-full max-w-3xl mx-auto space-y-6 animate-fadeIn">
       {/* Score & Summary */}
-      <div className="text-center space-y-4">
-        <div className="inline-block px-6 py-3 rounded-full bg-blue-500 text-white text-2xl font-bold">
+      <div className="text-center space-y-3">
+        <div className="inline-block px-4 py-2 rounded-full bg-blue-500 text-white text-lg font-bold">
           {feedback.score}점
         </div>
-        <p className="text-lg text-gray-700 dark:text-gray-300">{feedback.feedback_summary}</p>
+        <p className="text-base text-gray-700 dark:text-gray-300">{feedback.feedback_summary}</p>
       </div>
 
       {/* User's Answer */}
@@ -78,23 +78,6 @@ export default function FeedbackDisplay({
               <li key={index} className="text-orange-800 dark:text-orange-200">
                 <span className="font-semibold">"{item.original}"</span>
                 <p className="mt-1 ml-4">{item.comment}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Alternative Expressions */}
-      {feedback.alternative_expressions.length > 0 && (
-        <div className="bg-blue-50 dark:bg-blue-950 border-2 border-blue-500 rounded-xl p-6">
-          <h3 className="text-lg font-bold mb-4 text-blue-900 dark:text-blue-100">
-            🔄 다른 표현들
-          </h3>
-          <ul className="space-y-2">
-            {feedback.alternative_expressions.map((expression, index) => (
-              <li key={index} className="text-blue-800 dark:text-blue-200 flex items-start">
-                <span className="mr-2">•</span>
-                <span>{expression}</span>
               </li>
             ))}
           </ul>

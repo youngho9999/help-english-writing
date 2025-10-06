@@ -88,6 +88,12 @@ export default function Home() {
     }
   };
 
+  const handleRetry = () => {
+    setUserAnswer("");
+    setFeedback(null);
+    setIsSubmitted(false);
+  };
+
   // 로딩 중
   if (isLoadingProblems) {
     return (
@@ -114,19 +120,20 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8 py-16">
-      <div className="w-full max-w-5xl space-y-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold mb-4">EngPT</h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">영어 작문 연습 플랫폼</p>
-        </div>
+    <div className="min-h-screen p-8">
+      {/* Header - Left Top */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold">EngPT</h1>
+        <p className="text-sm text-gray-600 dark:text-gray-400">영어 작문 연습 플랫폼</p>
+      </div>
 
+      <div className="w-full max-w-5xl mx-auto space-y-8">
         {/* Problem Card */}
         <ProblemCard
           korean={currentProblem.korean}
           problemNumber={currentProblemIndex + 1}
           totalProblems={problems.length}
+          compact={isSubmitted}
         />
 
         {/* Answer Input */}
@@ -143,18 +150,36 @@ export default function Home() {
           />
         )}
 
-        {/* Buttons - Always visible */}
-        <div className="flex justify-center gap-4">
-          {!isSubmitted && (
+        {/* Submit Button - Only visible when not submitted */}
+        {!isSubmitted && (
+          <div className="flex justify-center">
             <Button onClick={handleSubmit} disabled={!userAnswer.trim() || isLoading}>
               {isLoading ? "평가 중..." : "제출하기"}
             </Button>
-          )}
-          <Button onClick={handleNext} variant="secondary">
+          </div>
+        )}
+      </div>
+
+      {/* Fixed Navigation Buttons - Right Side */}
+      {isSubmitted && (
+        <div className="fixed right-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-50">
+          <Button onClick={handleRetry} variant="primary" className="shadow-lg">
+            재시도
+          </Button>
+          <Button onClick={handleNext} variant="secondary" className="shadow-lg">
             {currentProblemIndex < problems.length - 1 ? "다음 문제" : "처음으로"}
           </Button>
         </div>
-      </div>
+      )}
+
+      {/* Fixed Next Button - When not submitted */}
+      {!isSubmitted && (
+        <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50">
+          <Button onClick={handleNext} variant="secondary" className="shadow-lg">
+            {currentProblemIndex < problems.length - 1 ? "다음 문제" : "처음으로"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

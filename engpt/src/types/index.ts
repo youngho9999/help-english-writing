@@ -15,7 +15,6 @@ export interface FeedbackData {
   corrected_sentence: string;
   feedback_summary: string;
   detailed_feedback: DetailedFeedback[];
-  alternative_expressions: string[];
 }
 
 export interface AppState {
